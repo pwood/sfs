@@ -34,3 +34,24 @@ as a true or false comparison.
 > end
 IP is present!
 
+All check_* functions support a boolean flag after the item you are searching
+for which will instead cause the function to return an array, which in the 
+case of a successful appearance will return a two item array which contains
+the frequency and the last seen date. With a successful non appearance the
+second value will be nil.
+
+> result = api.check_ip("91.186.18.61", true)
+=> [31, Sun Jan 04 14:43:09 +0000 2009]
+
+Alternativly you can provide two variables infront of the assignment operator
+in order to automatically have the array split.
+
+> frequency, lastseen = api.check_ip("91.186.18.61", true)
+=> [31, Sun Jan 04 14:43:09 +0000 2009]
+
+> frequency
+=> 31
+
+> lastseen
+=> Sun Jan 04 14:43:09 +0000 2009
+

@@ -34,6 +34,9 @@ end
 # Load HTTP library
 require 'net/http'
 
+# Require time for parsing.
+require 'time'
+
 module SFS
   class API
     @@sfs_uri = "www.stopforumspam.com/api"
@@ -42,8 +45,12 @@ module SFS
                      :username => "username" }
 
     @@sfs_checks.keys.each do |key|
-      define_method("check_#{key}") do |item|
-	return check(key, item)
+      define_method("check_#{key}") do |*item|
+	if (item.size == 1)
+ 	  return check(key, item[0], false)
+	else
+          return check(key, item[0], item[1])
+	end
       end
     end
 
@@ -56,7 +63,7 @@ module SFS
 
     private
 
-    def check(type, item)
+    def check(type, item, advanced)
       raise Exception, "No #{type} provided!" if !item
 
       # Construct query URL.
@@ -79,7 +86,7 @@ module SFS
 
         case result
           when Net::HTTPSuccess
-            return parse_result(result.body)
+            return parse_result(result.body, advanced)
           else
             raise Exception, "Unable to retrieve from API, Net::HTTP issue."
           end
@@ -91,7 +98,7 @@ module SFS
       end
     end
 
-    def parse_result(result)
+    def parse_result(result, advanced)
       doc = Hpricot.XML(result).at("response")
 
       raise Exception, "Invalid response from API, Invalid XML." if (!doc)
@@ -99,9 +106,17 @@ module SFS
       raise Exception, "API failed to retrieve information." if (doc.attributes["success"] != "true")
   
       if ((doc/"appears").inner_text != "yes")
-        return false
+	if (!advanced)
+          return false
+	else
+	  return false, nil
+	end
       else
-        return (doc/"frequency").inner_text.to_i
+	if (!advanced)
+          return (doc/"frequency").inner_text.to_i
+	else
+	  return (doc/"frequency").inner_text.to_i, Time.parse((doc/"lastseen").inner_text.to_s)
+	end
       end
     end
   end
