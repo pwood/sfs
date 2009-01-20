@@ -39,7 +39,7 @@ module SFS
     @@sfs_uri = "www.stopforumspam.com/api"
     @@sfs_checks = { :ip => "ip",
                      :email => "email",
-		     :username => "username" }
+                     :username => "username" }
 
     attr_accessor :api_key, :sfs_uri, :sfs_checks
 
@@ -52,15 +52,15 @@ module SFS
 
     def method_missing(method_called, *args)
       if match = /^check_([_a-zA-Z]\w*)$/.match(method_called.to_s)
-	method = match.captures[0].to_sym
+        method = match.captures[0].to_sym
 
-	if (@@sfs_checks[method])
-	  return check(method, args)
-	else
-	  super
-	end
+        if (@@sfs_checks[method])
+          return check(method, args)
+        else
+          super
+        end
       else
-	super
+        super
       end
     end
 
@@ -82,20 +82,20 @@ module SFS
 
       # Attempt request
       begin
-	http.start do
-	  result = http.request(request)
+        http.start do
+          result = http.request(request)
 
-	case result
-	  when Net::HTTPSuccess
-	    return parse_result(result.body)
-	  else
-	    raise Exception, "Unable to retrieve from API, Net::HTTP issue."
-	  end
-	end
+        case result
+          when Net::HTTPSuccess
+            return parse_result(result.body)
+          else
+            raise Exception, "Unable to retrieve from API, Net::HTTP issue."
+          end
+        end
       rescue Timeout::Error => e
-	raise Exception, "Unable to retrieve from API, Timeout:Error."
+        raise Exception, "Unable to retrieve from API, Timeout:Error."
       rescue => e
-	raise Exception, "Unable to retrieve from API, Exception."
+        raise Exception, "Unable to retrieve from API, Exception."
       end
     end
 
@@ -107,9 +107,9 @@ module SFS
       raise Exception, "API failed to retrieve information." if (doc.attributes["success"] != "true")
   
       if ((doc/"appears").inner_text != "yes")
-	return false
+        return false
       else
-	return (doc/"frequency").inner_text.to_i
+        return (doc/"frequency").inner_text.to_i
       end
     end
   end
