@@ -1,0 +1,29 @@
+SFS::API
+--------
+SFS::API is a Ruby implementation of an API to interface with the free and
+open anti forum spam database on http://www.stopforumspam.com/. Our thanks
+go out to the team who have developed the website and all its contributers.
+
+Credits
+-------
+Peter Wood <peter+sfsapi@alastria.net>
+
+Usage
+-----
+Functions are demonstrated bellow, upon failure an exception will be raised,
+upon success but no appearance false will be returned, upon appearance an
+integer containing the frequency can be returned. 
+require 'sfs'
+
+api = SFS::API.new
+
+ip = api.check_ip("91.186.18.61")
+email = api.check_email("g2fsehis5e@mail.ru")
+username = api.check_username("MariFoogwoogy")
+
+Because of the way the Ruby language works you can simply treat the result
+as a true or false comparison.
+
+if (ip)
+  puts "IP is present!"
+end
