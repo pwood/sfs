@@ -46,11 +46,11 @@ module SFS
 
     @@sfs_checks.keys.each do |key|
       define_method("check_#{key}") do |*item|
-	if (item.size == 1)
- 	  return check(key, item[0], false)
-	else
+        if (item.size == 1)
+          return check(key, item[0], false)
+        else
           return check(key, item[0], item[1])
-	end
+        end
       end
     end
 
@@ -84,12 +84,12 @@ module SFS
         http.start do
           result = http.request(request)
 
-        case result
-          when Net::HTTPSuccess
-            return parse_result(result.body, advanced)
-          else
-            raise Exception, "Unable to retrieve from API, Net::HTTP issue."
-          end
+          case result
+            when Net::HTTPSuccess
+              return parse_result(result.body, advanced)
+            else
+              raise Exception, "Unable to retrieve from API, Net::HTTP issue."
+            end
         end
       rescue Timeout::Error => e
         raise Exception, "Unable to retrieve from API, Timeout:Error."
@@ -106,17 +106,17 @@ module SFS
       raise Exception, "API failed to retrieve information." if (doc.attributes["success"] != "true")
   
       if ((doc/"appears").inner_text != "yes")
-	if (!advanced)
+        if (!advanced)
           return false
-	else
-	  return false, nil
-	end
+        else
+          return false, nil
+        end
       else
-	if (!advanced)
+        if (!advanced)
           return (doc/"frequency").inner_text.to_i
-	else
-	  return (doc/"frequency").inner_text.to_i, Time.parse((doc/"lastseen").inner_text.to_s)
-	end
+        else
+          return (doc/"frequency").inner_text.to_i, Time.parse((doc/"lastseen").inner_text.to_s)
+        end
       end
     end
   end
