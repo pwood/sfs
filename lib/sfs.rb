@@ -41,6 +41,12 @@ module SFS
                      :email => "email",
                      :username => "username" }
 
+    @@sfs_checks.keys.each do |key|
+      define_method("check_#{key}") do |item|
+	return check(key, item)
+      end
+    end
+
     attr_accessor :api_key, :sfs_uri, :sfs_checks
 
     def add (ip, email, username, api_key = nil)
@@ -50,23 +56,11 @@ module SFS
 
     private
 
-    def method_missing(method_called, *args)
-      if match = /^check_([_a-zA-Z]\w*)$/.match(method_called.to_s)
-        method = match.captures[0].to_sym
-
-        if (@@sfs_checks[method])
-          return check(method, args)
-        end
-      end
-      
-      super
-    end
-
     def check(type, item)
-      raise Exception, "No #{type} provided!" if !item[0]
+      raise Exception, "No #{type} provided!" if !item
 
       # Construct query URL.
-      url = "http://#{@@sfs_uri}?#{@@sfs_checks[type]}=#{item[0]}"
+      url = "http://#{@@sfs_uri}?#{@@sfs_checks[type]}=#{item}"
 
       # Construct request.
       request = Net::HTTP::Get.new(url)

@@ -12,18 +12,25 @@ Usage
 -----
 Functions are demonstrated bellow, upon failure an exception will be raised,
 upon success but no appearance false will be returned, upon appearance an
-integer containing the frequency can be returned. 
-require 'sfs'
+integer containing the frequency will be returned. 
 
-api = SFS::API.new
+> api = SFS::API.new
+=> #<SFS::API:0x89b51c4>
 
-ip = api.check_ip("91.186.18.61")
-email = api.check_email("g2fsehis5e@mail.ru")
-username = api.check_username("MariFoogwoogy")
+> ip = api.check_ip("91.186.18.61")
+=> 31
+
+> email = api.check_email("g2fsehis5e@mail.ru")
+=> 1
+
+> username = api.check_username("MariFoogwoogy")
+=> 1
 
 Because of the way the Ruby language works you can simply treat the result
 as a true or false comparison.
 
-if (ip)
-  puts "IP is present!"
-end
+> if (ip)
+>   puts "IP is present!"
+> end
+IP is present!
+
