@@ -56,12 +56,10 @@ module SFS
 
         if (@@sfs_checks[method])
           return check(method, args)
-        else
-          super
         end
-      else
-        super
       end
+      
+      super
     end
 
     def check(type, item)
